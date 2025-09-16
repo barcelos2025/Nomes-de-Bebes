@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-key="pageTitle">Perfect Baby Names Generator</title>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4466403456662578"
+     crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="container">
+        
+        <header class="header">
+            <h1 data-i18n-key="mainHeading">Perfect Baby Names</h1>
+            <h2 data-i18n-key="subHeading">Discover beautiful, meaningful names for your little miracle. Generate, explore, and save your favorites.</h2>
+            <div class="cta-buttons">
+                <a href="#generator" class="btn btn-primary"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n-key="startDiscovering">Start Discovering Names</span></a>
+                <div class="social-proof">
+                    <div class="avatar-stack">
+                        <i class="fa-solid fa-user"></i>
+                        <i class="fa-solid fa-user"></i>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span data-i18n-key="joinParents">Join 50,000+ Parents</span>
+                </div>
+            </div>
+            <div class="metrics-container">
+                <div class="metric-item">
+                    <i class="fa-solid fa-book-bible"></i>
+                    <div class="metric-text">
+                        <span data-i18n-key="metricNamesCount">1.3k+</span> 
+                        <span data-i18n-key="metricNames">Names</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fa-solid fa-face-smile"></i>
+                    <div class="metric-text">
+                        <span data-i18n-key="metricParentsCount">50k+</span> 
+                        <span data-i18n-key="metricParents">Happy Parents</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fa-solid fa-earth-americas"></i>
+                    <div class="metric-text">
+                        <span data-i18n-key="metricOriginsCount">20+</span> 
+                        <span data-i18n-key="metricOrigins">Origins</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="ad-space" data-i18n-key="sponsoredContent">Sponsored Content / AdSense Slot</div>
+
+        <section id="generator" class="section">
+            <div class="card generator-card">
+                <div style="text-align: center;">
+                    <h3 class="section-title" data-i18n-key="discoverTitle">Discover Your Perfect Name</h3>
+                    <p class="section-subtitle" data-i18n-key="discoverSubtitle">Generate beautiful, meaningful names for your little one</p>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group"> <label data-i18n-key="filterGender">Gender</label> <div class="gender-options"> <button class="active" data-i18n-key="genderAll">All</button> <button data-i18n-key="genderBoy">Boy</button> <button data-i18n-key="genderGirl">Girl</button> <button data-i18n-key="genderUnisex">Unisex</button> </div> </div>
+                    <div class="filter-group"> <label for="culture-filter" data-i18n-key="filterCulture">Culture/Ethnicity</label> <select id="culture-filter" class="dropdown"> <option value="All Cultures" data-i18n-key="cultureAll">All Cultures</option> <option value="European">European</option> <option value="Middle Eastern">Middle Eastern</option> <option value="East Asian">East Asian</option> <option value="South Asian">South Asian</option> <option value="African">African</option> <option value="Jewish">Jewish</option> <option value="Latin American">Latin American</option> <option value="Nordic">Nordic</option> <option value="Slavic">Slavic</option> <option value="Native American">Native American</option> <option value="Celtic">Celtic</option> <option value="International">International</option> <option value="Polynesian">Polynesian</option> </select> </div>
+                    <div class="filter-group"> <label for="religion-filter" data-i18n-key="filterReligion">Religion</label> <select id="religion-filter" class="dropdown"> <option value="All Religions" data-i18n-key="religionAll">All Religions</option> <option value="Christian">Christian</option> <option value="Islamic">Islamic</option> <option value="Hindu">Hindu</option> <option value="Jewish">Jewish</option> <option value="Buddhist">Buddhist</option> <option value="Sikh">Sikh</option> <option value="Jain">Jain</option> <option value="Baha'i">Baha'i</option> <option value="Shinto">Shinto</option> <option value="Taoist">Taoist</option> <option value="Zoroastrian">Zoroastrian</option> <option value="Orthodox Christian">Orthodox Christian</option> <option value="Spiritual">Spiritual</option> <option value="Other">Other</option> </select> </div>
+                </div>
+                <div class="result-display" id="result-display">
+                    <p data-i18n-key="loadingNames">Loading names...</p>
+                </div>
+            </div>
+            <button id="generate-btn" class="btn btn-primary" disabled>
+                <i class="fa-solid fa-arrows-rotate"></i> <span data-i18n-key="generateButton">Generate New Name</span>
+            </button>
+        </section>
+
+        <section id="favorites-section" class="section" style="display: none;">
+            <h3 class="section-title">
+                <i class="fa-solid fa-heart" style="color: #ef779d;"></i>
+                <span data-i18n-key="favoritesTitle">Your Favorite Names</span>
+                <button id="share-favorites-btn" class="btn btn-small">
+                    <i class="fa-solid fa-share-alt"></i>
+                    <span data-i18n-key="shareButton">Share List</span>
+                </button>
+                <button id="clear-favorites-btn" class="btn btn-small btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                    <span data-i18n-key="clearButton">Clear List</span>
+                </button>
+            </h3>
+            <div id="favorites-list" class="favorites-container">
+            </div>
+        </section>
+        
+        <section class="section"> 
+            <h3 class="section-title" data-i18n-key="socialTitle">✨ Make It Social</h3> 
+            <div class="grid-2"> 
+                <div class="feature-card clickable-card" id="start-quiz-card"> 
+                    <div class="icon"><i class="fa-solid fa-star" style="color: #a26bfe;"></i></div> 
+                    <h4 data-i18n-key="quizTitle">Name Style Quiz</h4> 
+                    <p data-i18n-key="quizSubtitle">Discover your naming style.</p> 
+                </div> 
+                <div class="feature-card clickable-card" id="share-lists-card"> 
+                    <div class="icon"><i class="fa-solid fa-share-nodes" style="color: #74b3f9;"></i></div> 
+                    <h4 data-i18n-key="shareTitle">Share Name Lists</h4> 
+                    <p data-i18n-key="shareSubtitle">Curated themed collections.</p> 
+                </div> 
+            </div> 
+        </section>
+
+        <section id="quiz-section" class="section" style="display: none;">
+            <div class="card quiz-card">
+                <div id="quiz-container">
+                </div>
+            </div>
+        </section>
+        
+        <section class="section"> 
+            <h3 class="trending-section-title" data-i18n-key="trendingTitle">
+                <i class="fa-solid fa-chart-line"></i> 
+                <span>Trending This Week</span>
+            </h3> 
+            <div class="grid-3" id="trending-names-container">
+            </div> 
+        </section>
+
+        <div class="ad-space" data-i18n-key="relatedProducts">Related Products / AdSense Slot</div>
+        <section class="section"> <h3 class="section-title" data-i18n-key="whyLoveTitle">Why Parents Love Our Generator</h3> <p class="section-subtitle" data-i18n-key="whyLoveSubtitle">More than just a name list - we help you find names with meaning, style, and perfect fit for your family.</p> <div class="grid-3"> <div class="feature-card"> <div class="icon" style="color: #ef779d;"><i class="fa-solid fa-heart"></i></div> <h4 data-i18n-key="featureMeaningful">Meaningful Names</h4> <p data-i18n-key="featureMeaningfulText">Every name comes with its origin, meaning, and cultural significance to help you choose wisely.</p> </div> <div class="feature-card"> <div class="icon" style="color: #a26bfe;"><i class="fa-solid fa-share-alt"></i></div> <h4 data-i18n-key="featureSharing">Easy Sharing</h4> <p data-i18n-key="featureSharingText">Share your favorite names with family and friends, get opinions, and make decisions together.</p> </div> <div class="feature-card"> <div class="icon" style="color: #74b3f9;"><i class="fa-solid fa-wand-magic-sparkles"></i></div> <h4 data-i18n-key="featurePersonalized">Personalized</h4> <p data-i18n-key="featurePersonalizedText">Filter by gender, origin, popularity, and style preferences to find names that resonate with you.</p> </div> </div> </section>
+    </main>
+
+    <footer class="footer">
+        <h4><i class="fa-solid fa-baby"></i> <span data-i18n-key="footerTitle">Baby Names</span></h4>
+        <p data-i18n-key="footerSlogan">Helping families find the perfect name for their little ones since 2024. Made with ❤️ for expecting parents.</p>
+        <p class="copyright" data-i18n-key="footerCopyright">© 2025 Baby Names Generator. All rights reserved.</p>
+    </footer>
+
+    <div id="cookie-banner" class="cookie-banner">
+        <p data-i18n-key="cookieText">We use cookies to enhance your experience and save your favorite names. By continuing, you agree to our use of cookies.</p>
+        <div class="cookie-buttons">
+            <button id="cookie-accept" class="btn btn-primary" data-i18n-key="cookieAccept">Accept</button>
+            <button id="cookie-decline" class="btn btn-secondary" data-i18n-key="cookieDecline">Decline</button>
+        </div>
+    </div>
+
+    <div id="modal-overlay" style="display: none;"></div>
+    <div id="themed-lists-modal" style="display: none;">
+        <button id="modal-close-btn" class="modal-close-btn">&times;</button>
+        <div id="modal-content">
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
