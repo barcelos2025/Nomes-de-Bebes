@@ -64,60 +64,8 @@ function startQuiz() { quizData.userScores = { classic: 0, modern: 0, nature: 0,
 function displayGenderSelection() { const currentLang = localStorage.getItem('language') || 'en'; quizContainer.innerHTML = `<h3>${translations[currentLang].quizGenderTitle}</h3><div class="quiz-gender-options"><button class="quiz-gender-btn" data-gender="menino">${translations[currentLang].quizGenderBoy}</button><button class="quiz-gender-btn" data-gender="menina">${translations[currentLang].quizGenderGirl}</button><button class="quiz-gender-btn" data-gender="unissex">${translations[currentLang].quizGenderUnisex}</button></div>`; document.querySelectorAll('.quiz-gender-btn').forEach(btn => { btn.addEventListener('click', (e) => { quizData.selectedGender = e.target.dataset.gender; displayQuizQuestion(); }); }); }
 function displayQuizQuestion() { const currentLang = localStorage.getItem('language') || 'en'; if (quizData.currentQuestionIndex >= quizData.questions.length) { displayQuizResult(); return; } const question = quizData.questions[quizData.currentQuestionIndex]; const progress = (quizData.currentQuestionIndex / quizData.questions.length) * 100; let optionsHTML = ''; question.options.forEach(option => { optionsHTML += `<button class="quiz-option-btn">${translations[currentLang][option.key]}</button>`; }); quizContainer.innerHTML = `<div class="quiz-progress-bar-container"><div class="quiz-progress-bar" style="width: ${progress}%;"></div></div><h3 class="quiz-question">${translations[currentLang][question.questionKey]}</h3><div class="quiz-options">${optionsHTML}</div>`; document.querySelectorAll('.quiz-option-btn').forEach((btn, index) => { btn.addEventListener('click', () => { handleAnswer(index); }); }); }
 function handleAnswer(optionIndex) { const question = quizData.questions[quizData.currentQuestionIndex]; const selectedOption = question.options[optionIndex]; for (const style in selectedOption.scores) { quizData.userScores[style] += selectedOption.scores[style]; } quizData.currentQuestionIndex++; displayQuizQuestion(); }
-function getStyleSuggestions(style, gender) {
-    const styleToTagsMap = { classic: ['European', 'Christian', 'Jewish', 'Latin American', 'Celtic'], modern: ['International', 'Polynesian'], nature: ['Spiritual'], romantic: ['Spiritual', 'Celtic'] };
-    const natureKeywords = ['flor', 'pedra', 'rio', 'lua', 'sol', 'mar', 'céu', 'estrela', 'natureza', 'terra', 'monte', 'flower', 'stone', 'river', 'moon', 'sun', 'sea', 'sky', 'star', 'nature', 'earth', 'mount'];
-    
-    let filteredNames = names.filter(name => {
-        return name.gender === gender ||
-               (gender === 'menino' && name.gender === 'unissex') ||
-               (gender === 'menina' && name.gender === 'unissex');
-    });
-
-    let styleFiltered = [];
-    if (style === 'nature') {
-        styleFiltered = filteredNames.filter(name => (name.tags && name.tags.some(tag => styleToTagsMap[style].includes(tag))) || (name.meaning && natureKeywords.some(keyword => name.meaning.toLowerCase().includes(keyword))));
-    } else {
-        styleFiltered = filteredNames.filter(name => name.tags && name.tags.some(tag => styleToTagsMap[style].includes(tag)));
-    }
-    
-    if (styleFiltered.length < 5) {
-        styleFiltered = [...styleFiltered, ...filteredNames.filter(n => !styleFiltered.includes(n))];
-    }
-    
-    return styleFiltered.sort(() => 0.5 - Math.random()).slice(0, 5);
-}
-function displayQuizResult() {
-    let finalStyle = 'modern';
-    let maxScore = 0;
-    for (const style in quizData.userScores) {
-        if (quizData.userScores[style] > maxScore) {
-            maxScore = quizData.userScores[style];
-            finalStyle = style;
-        }
-    }
-    const result = quizData.results[finalStyle];
-    const currentLang = localStorage.getItem('language') || 'en';
-    const suggestions = getStyleSuggestions(finalStyle, quizData.selectedGender);
-    
-    let suggestionsHTML = '';
-    if (suggestions.length > 0) {
-        suggestions.forEach(name => {
-            let nameClass = '';
-            if (quizData.selectedGender === 'menina') nameClass = 'name-girl';
-            else if (quizData.selectedGender === 'menino') nameClass = 'name-boy';
-            else { // Unissex ou caso de fallback
-                if (name.gender === 'menina') nameClass = 'name-girl';
-                else if (name.gender === 'menino') nameClass = 'name-boy';
-                else nameClass = 'name-unisex';
-            }
-            suggestionsHTML += `<div class="suggestion-card"><div class="name ${nameClass}">${name.name}</div><div class="meaning">"${name.meaning}"</div></div>`;
-        });
-    }
-    
-    quizContainer.innerHTML = `<div class="quiz-result"><h4>${translations[currentLang].quizResultTitle}</h4><p class="result-style">${translations[currentLang][result.titleKey]}</p><p>${translations[currentLang][result.descKey]}</p><div class="quiz-suggestions-container"><h4>${translations[currentLang].quizSuggestionsTitle}</h4>${suggestionsHTML}</div><button id="restart-quiz-btn" class="btn btn-primary" style="margin-top: 30px;"><i class="fa-solid fa-arrows-rotate"></i> <span>${translations[currentLang].quizRestartButton}</span></button></div>`;
-    document.getElementById('restart-quiz-btn').addEventListener('click', startQuiz);
-}
+function getStyleSuggestions(style, gender) { const styleToTagsMap = { classic: ['European', 'Christian', 'Jewish', 'Latin American', 'Celtic'], modern: ['International', 'Polynesian'], nature: ['Spiritual'], romantic: ['Spiritual', 'Celtic'] }; const natureKeywords = ['flor', 'pedra', 'rio', 'lua', 'sol', 'mar', 'céu', 'estrela', 'natureza', 'terra', 'monte', 'flower', 'stone', 'river', 'moon', 'sun', 'sea', 'sky', 'star', 'nature', 'earth', 'mount']; let filteredNames = names.filter(name => { return name.gender === gender || (gender === 'menino' && name.gender === 'unissex') || (gender === 'menina' && name.gender === 'unissex'); }); let styleFiltered = []; if (style === 'nature') { styleFiltered = filteredNames.filter(name => (name.tags && name.tags.some(tag => styleToTagsMap[style].includes(tag))) || (name.meaning && natureKeywords.some(keyword => name.meaning.toLowerCase().includes(keyword)))); } else { styleFiltered = filteredNames.filter(name => name.tags && name.tags.some(tag => styleToTagsMap[style].includes(tag))); } if (styleFiltered.length < 5) { styleFiltered = [...styleFiltered, ...filteredNames.filter(n => !styleFiltered.includes(n))]; } return styleFiltered.sort(() => 0.5 - Math.random()).slice(0, 5); }
+function displayQuizResult() { let finalStyle = 'modern'; let maxScore = 0; for (const style in quizData.userScores) { if (quizData.userScores[style] > maxScore) { maxScore = quizData.userScores[style]; finalStyle = style; } } const result = quizData.results[finalStyle]; const currentLang = localStorage.getItem('language') || 'en'; const suggestions = getStyleSuggestions(finalStyle, quizData.selectedGender); let suggestionsHTML = ''; if (suggestions.length > 0) { suggestions.forEach(name => { let nameClass = ''; if (quizData.selectedGender === 'menina') nameClass = 'name-girl'; else if (quizData.selectedGender === 'menino') nameClass = 'name-boy'; else { if (name.gender === 'menina') nameClass = 'name-girl'; else if (name.gender === 'menino') nameClass = 'name-boy'; else nameClass = 'name-unisex'; } suggestionsHTML += `<div class="suggestion-card"><div class="name ${nameClass}">${name.name}</div><div class="meaning">"${name.meaning}"</div></div>`; }); } quizContainer.innerHTML = `<div class="quiz-result"><h4>${translations[currentLang].quizResultTitle}</h4><p class="result-style">${translations[currentLang][result.titleKey]}</p><p>${translations[currentLang][result.descKey]}</p><div class="quiz-suggestions-container"><h4>${translations[currentLang].quizSuggestionsTitle}</h4>${suggestionsHTML}</div><button id="restart-quiz-btn" class="btn btn-primary" style="margin-top: 30px;"><i class="fa-solid fa-arrows-rotate"></i> <span>${translations[currentLang].quizRestartButton}</span></button></div>`; document.getElementById('restart-quiz-btn').addEventListener('click', startQuiz); }
 
 // LÓGICA DO MODAL
 function openModal() { mainModal.style.display = 'block'; modalOverlay.style.display = 'block'; }
@@ -142,93 +90,8 @@ function clearLocalFavorites() { favorites = []; localStorage.removeItem('favori
 const saveFavorite = (nameObject) => { const isAlreadyFavorite = favorites.some(fav => fav.name === nameObject.name); if (!isAlreadyFavorite) { favorites.push(nameObject); localStorage.setItem('favoriteNames', JSON.stringify(favorites)); renderFavorites(); } if(isInCoupleMode) { const nameRef = database.ref('sessions/' + coupleSessionId + '/names/' + nameObject.name + '/' + userId); nameRef.set(true); } };
 function showToast(messageKey) { const currentLang = localStorage.getItem('language') || 'en'; const message = translations[currentLang][messageKey]; const toast = document.createElement('div'); toast.className = 'toast-notification'; toast.textContent = message; toastContainer.appendChild(toast); setTimeout(() => { toast.remove(); }, 3000); }
 const shareSingleName = (nameObject) => { const currentLang = localStorage.getItem('language') || 'en'; let textTemplate = translations[currentLang].shareNameText; const textToCopy = textTemplate.replace('%name%', nameObject.name).replace('%meaning%', nameObject.meaning); navigator.clipboard.writeText(textToCopy).then(() => { showToast('listCopiedToast'); }).catch(err => console.error('Failed to copy name: ', err)); };
-
-function displaySelectedName(selectedName) {
-    const currentLang = localStorage.getItem('language') || 'en';
-    let tagsHTML = '';
-    if (selectedName.tags) {
-        selectedName.tags.forEach(tag => { tagsHTML += `<span class="tag">${tag}</span>`; });
-    }
-    
-    let nameClass = '';
-    if (currentGenderFilter === 'menina') {
-        nameClass = 'name-girl';
-    } else if (currentGenderFilter === 'menino') {
-        nameClass = 'name-boy';
-    } else { // Para os filtros 'todos' ou 'unissex'
-        if (selectedName.gender === 'menina') nameClass = 'name-girl';
-        else if (selectedName.gender === 'menino') nameClass = 'name-boy';
-        else nameClass = 'name-unisex';
-    }
-    
-    resultContainer.innerHTML = `
-        <div>
-            <h3 class="result-name ${nameClass}">${selectedName.name}</h3>
-            <div class="result-tags">${tagsHTML}</div>
-            <p class="result-meaning">"${selectedName.meaning}"</p>
-            <div class="name-actions">
-                <button class="action-btn save-favorite"><i class="fa-regular fa-heart"></i><span data-i18n-key="saveFavorite">${translations[currentLang].saveFavorite}</span></button>
-                <button class="action-btn share-name-btn"><i class="fa-solid fa-share-alt"></i><span data-i18n-key="shareNameButton">${translations[currentLang].shareNameButton}</span></button>
-            </div>
-        </div>`;
-    
-    resultContainer.querySelector('.save-favorite').addEventListener('click', () => saveFavorite(selectedName));
-    resultContainer.querySelector('.share-name-btn').addEventListener('click', () => shareSingleName(selectedName));
-}
-
-async function generateNewName() {
-    if (names.length === 0) return;
-
-    if (isInCoupleMode) {
-        const SUGGESTION_CHANCE = 0.4;
-        if (Math.random() < SUGGESTION_CHANCE) {
-            const sessionRef = database.ref('sessions/' + coupleSessionId + '/names');
-            const snapshot = await sessionRef.once('value');
-            const likedData = snapshot.val();
-
-            if (likedData) {
-                const partnerLikedNames = [];
-                Object.keys(likedData).forEach(nameStr => {
-                    const likers = Object.keys(likedData[nameStr]);
-                    if (!likers.includes(userId)) {
-                        partnerLikedNames.push(nameStr);
-                    }
-                });
-
-                const suggestibleNames = names.filter(name => {
-                    const isPartnerLiked = partnerLikedNames.includes(name.name);
-                    const genderMatch = currentGenderFilter === 'todos' || name.gender === currentGenderFilter || (currentGenderFilter === 'menino' && name.gender === 'unissex') || (currentGenderFilter === 'menina' && name.gender === 'unissex');
-                    const cultureMatch = (currentCultureFilter === 'All Cultures') || (name.tags && name.tags.includes(currentCultureFilter));
-                    const religionMatch = (currentReligionFilter === 'All Religions') || (name.tags && name.tags.includes(currentReligionFilter));
-                    return isPartnerLiked && genderMatch && cultureMatch && religionMatch;
-                });
-
-                if (suggestibleNames.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * suggestibleNames.length);
-                    displaySelectedName(suggestibleNames[randomIndex]);
-                    return;
-                }
-            }
-        }
-    }
-
-    const filteredNames = names.filter(name => {
-        const genderMatch = currentGenderFilter === 'todos' || name.gender === currentGenderFilter || (currentGenderFilter === 'menino' && name.gender === 'unissex') || (currentGenderFilter === 'menina' && name.gender === 'unissex');
-        const cultureMatch = (currentCultureFilter === 'All Cultures') || (name.tags && name.tags.includes(currentCultureFilter));
-        const religionMatch = (currentReligionFilter === 'All Religions') || (name.tags && name.tags.includes(currentReligionFilter));
-        return genderMatch && cultureMatch && religionMatch;
-    });
-
-    const currentLang = localStorage.getItem('language') || 'en';
-    if (filteredNames.length === 0) {
-        resultContainer.innerHTML = `<div><p>${translations[currentLang].noNamesFound}</p><p style="font-size:0.9rem; color:#888;">${translations[currentLang].tryDifferent}</p></div>`;
-        return;
-    }
-    
-    const randomIndex = Math.floor(Math.random() * filteredNames.length);
-    displaySelectedName(filteredNames[randomIndex]);
-}
-
+function displaySelectedName(selectedName) { const currentLang = localStorage.getItem('language') || 'en'; let tagsHTML = ''; if (selectedName.tags) { selectedName.tags.forEach(tag => { tagsHTML += `<span class="tag">${tag}</span>`; }); } let nameClass = ''; if (currentGenderFilter === 'menina') { nameClass = 'name-girl'; } else if (currentGenderFilter === 'menino') { nameClass = 'name-boy'; } else { if (selectedName.gender === 'menina') nameClass = 'name-girl'; else if (selectedName.gender === 'menino') nameClass = 'name-boy'; else nameClass = 'name-unisex'; } resultContainer.innerHTML = `<div><h3 class="result-name ${nameClass}">${selectedName.name}</h3><div class="result-tags">${tagsHTML}</div><p class="result-meaning">"${selectedName.meaning}"</p><div class="name-actions"><button class="action-btn save-favorite"><i class="fa-regular fa-heart"></i><span data-i18n-key="saveFavorite">${translations[currentLang].saveFavorite}</span></button><button class="action-btn share-name-btn"><i class="fa-solid fa-share-alt"></i><span data-i18n-key="shareNameButton">${translations[currentLang].shareNameButton}</span></button></div></div>`; resultContainer.querySelector('.save-favorite').addEventListener('click', () => saveFavorite(selectedName)); resultContainer.querySelector('.share-name-btn').addEventListener('click', () => shareSingleName(selectedName)); }
+async function generateNewName() { if (names.length === 0) return; if (isInCoupleMode) { const SUGGESTION_CHANCE = 0.4; if (Math.random() < SUGGESTION_CHANCE) { const sessionRef = database.ref('sessions/' + coupleSessionId + '/names'); const snapshot = await sessionRef.once('value'); const likedData = snapshot.val(); if (likedData) { const partnerLikedNames = []; Object.keys(likedData).forEach(nameStr => { const likers = Object.keys(likedData[nameStr]); if (!likers.includes(userId)) { partnerLikedNames.push(nameStr); } }); const suggestibleNames = names.filter(name => { const isPartnerLiked = partnerLikedNames.includes(name.name); const genderMatch = currentGenderFilter === 'todos' || name.gender === currentGenderFilter || (currentGenderFilter === 'menino' && name.gender === 'unissex') || (currentGenderFilter === 'menina' && name.gender === 'unissex'); const cultureMatch = (currentCultureFilter === 'All Cultures') || (name.tags && name.tags.includes(currentCultureFilter)); const religionMatch = (currentReligionFilter === 'All Religions') || (name.tags && name.tags.includes(currentReligionFilter)); return isPartnerLiked && genderMatch && cultureMatch && religionMatch; }); if (suggestibleNames.length > 0) { const randomIndex = Math.floor(Math.random() * suggestibleNames.length); displaySelectedName(suggestibleNames[randomIndex]); return; } } } } const filteredNames = names.filter(name => { const genderMatch = currentGenderFilter === 'todos' || name.gender === currentGenderFilter || (currentGenderFilter === 'menino' && name.gender === 'unissex') || (currentGenderFilter === 'menina' && name.gender === 'unissex'); const cultureMatch = (currentCultureFilter === 'All Cultures') || (name.tags && name.tags.includes(currentCultureFilter)); const religionMatch = (currentReligionFilter === 'All Religions') || (name.tags && name.tags.includes(currentReligionFilter)); return genderMatch && cultureMatch && religionMatch; }); const currentLang = localStorage.getItem('language') || 'en'; if (filteredNames.length === 0) { resultContainer.innerHTML = `<div><p>${translations[currentLang].noNamesFound}</p><p style="font-size:0.9rem; color:#888;">${translations[currentLang].tryDifferent}</p></div>`; return; } const randomIndex = Math.floor(Math.random() * filteredNames.length); displaySelectedName(filteredNames[randomIndex]); }
 const themedLists = [ { titleKey: 'theme_mythological', filter: (n) => n.tags.includes('Spiritual') && (n.meaning.toLowerCase().includes('deus') || n.meaning.toLowerCase().includes('deusa') || n.meaning.toLowerCase().includes('god') || n.meaning.toLowerCase().includes('goddess')) }, { titleKey: 'theme_nature', filter: (n) => ['flor', 'pedra', 'rio', 'lua', 'sol', 'mar', 'céu', 'estrela', 'natureza', 'terra', 'monte', 'flower', 'stone', 'river', 'moon', 'sun', 'sea', 'sky', 'star', 'nature', 'earth', 'mount', 'salgueiro', 'prado', 'willow', 'meadow'].some(kw => n.meaning.toLowerCase().includes(kw)) }, { titleKey: 'theme_strong', filter: (n) => ['forte', 'nobre', 'guerreiro', 'protetor', 'leão', 'força', 'strong', 'noble', 'warrior', 'protector', 'lion', 'strength'].some(kw => n.meaning.toLowerCase().includes(kw)) }, { titleKey: 'theme_celestial', filter: (n) => ['estrela', 'lua', 'sol', 'céu', 'aurora', 'orion', 'star', 'moon', 'sun', 'sky', 'dawn'].some(kw => n.meaning.toLowerCase().includes(kw)) } ];
 function openThemedListsModal() { openModal(); displayThemeSelection(); }
 function displayThemeSelection() { const currentLang = localStorage.getItem('language') || 'en'; let themesHTML = `<h3>${translations[currentLang].themedListsTitle}</h3>`; themedLists.forEach(theme => { themesHTML += `<button class="theme-list-item" data-titlekey="${theme.titleKey}">${translations[currentLang][theme.titleKey]}</button>`; }); modalContent.innerHTML = themesHTML; document.querySelectorAll('.theme-list-item').forEach(btn => { btn.addEventListener('click', (e) => { const titleKey = e.target.dataset.titlekey; const theme = themedLists.find(t => t.titleKey === titleKey); displayNamesForTheme(theme); }); }); }

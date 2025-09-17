@@ -99,7 +99,7 @@ body {
 .section-subtitle { margin-bottom: 30px; }
 .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px; box-shadow: 0 5px 15px var(--card-shadow); }
 .ad-space { border: 2px dashed var(--border-color); padding: 40px; margin: 40px auto; border-radius: 20px; color: #ccc; }
-.generator-card { text-align: left; }
+.generator-card { text-align: left; margin-bottom: 20px; }
 
 .filters { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; margin: 20px 0; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
 .filter-group { flex: 1; min-width: 150px; }
@@ -122,8 +122,6 @@ body {
 .action-btn:hover { background-color: #f0e9f4; }
 .action-btn i { font-size: 1.1rem; margin-right: 8px; }
 .save-favorite i { color: var(--pink); }
-
-#generate-btn { display: block; margin: 30px auto 0 auto; width: auto; }
 
 .grid-2, .grid-3 { display: grid; gap: 20px; }
 .grid-2 { grid-template-columns: 1fr 1fr; }
