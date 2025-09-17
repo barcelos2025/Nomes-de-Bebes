@@ -26,6 +26,48 @@ body {
 }
 .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; }
 
+#active-couple-mode-banner {
+    background: var(--gradient);
+    color: white;
+    padding: 12px 20px;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+}
+.banner-main-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+.banner-tip-line {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+.banner-tip-line i {
+    margin-right: 5px;
+}
+#end-session-btn {
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid white;
+    padding: 5px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
 .header { padding: 60px 20px 80px; }
 .header h1 { font-size: 3.8rem; font-weight: 700; color: var(--heading-text); background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
 .header h2 { font-size: 1.2rem; font-weight: 400; max-width: 600px; margin: 0 auto 40px; }
@@ -85,7 +127,7 @@ body {
 
 .grid-2, .grid-3 { display: grid; gap: 20px; }
 .grid-2 { grid-template-columns: 1fr 1fr; }
-.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
 .feature-card { padding: 20px; border: 1px solid var(--border-color); border-radius: 15px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .feature-card.clickable-card { cursor: pointer; }
 .feature-card.clickable-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px var(--card-shadow); }
@@ -138,10 +180,14 @@ body {
 .footer { padding: 40px 20px; border-top: 1px solid var(--border-color); }
 
 #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(51, 51, 79, 0.6); backdrop-filter: blur(5px); z-index: 999; }
-#themed-lists-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--card-bg); border-radius: 20px; padding: 30px 40px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+#main-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--card-bg); border-radius: 20px; padding: 30px 40px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-align: center;}
 .modal-close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 2rem; color: #aaa; cursor: pointer; transition: color 0.2s; }
 .modal-close-btn:hover { color: var(--heading-text); }
-#modal-content h3 { font-size: 1.8rem; margin-bottom: 25px; color: var(--heading-text); }
+#modal-content h3 { font-size: 1.8rem; margin-bottom: 15px; color: var(--heading-text); }
+#modal-content p { margin-bottom: 30px; }
+.choice-buttons { display: flex; gap: 15px; justify-content: center; }
+.session-code { background-color: var(--border-color); border: 2px dashed #d1c4e9; color: var(--heading-text); padding: 20px; border-radius: 15px; font-size: 2.5rem; font-weight: 700; letter-spacing: 5px; margin-bottom: 20px; }
+.session-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1.5rem; text-align: center; letter-spacing: 3px; margin-bottom: 20px; }
 .theme-list-item { display: block; width: 100%; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; cursor: pointer; transition: all 0.2s ease; }
 .theme-list-item:hover { border-color: var(--pink); color: var(--pink); transform: translateX(5px); }
 .themed-name-list { columns: 2; gap: 15px; text-align: left; list-style-type: none; padding-left: 0; }

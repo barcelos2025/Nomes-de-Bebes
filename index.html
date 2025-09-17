@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="pageTitle">Perfect Baby Names Generator</title>
     
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4466403456662578"
      crossorigin="anonymous"></script>
 
@@ -17,6 +20,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="active-couple-mode-banner" style="display: none;"></div>
 
     <main class="container">
         
@@ -81,6 +85,15 @@
                 <i class="fa-solid fa-arrows-rotate"></i> <span data-i18n-key="generateButton">Generate New Name</span>
             </button>
         </section>
+        
+        <section id="matches-section" class="section" style="display: none;">
+            <h3 class="section-title">
+                <i class="fa-solid fa-heart-pulse" style="color: #ef779d;"></i>
+                <span data-i18n-key="matchesTitle">Our Matches</span>
+            </h3>
+            <div id="matches-list" class="favorites-container">
+            </div>
+        </section>
 
         <section id="favorites-section" class="section" style="display: none;">
             <h3 class="section-title">
@@ -101,11 +114,16 @@
         
         <section class="section"> 
             <h3 class="section-title" data-i18n-key="socialTitle">✨ Make It Social</h3> 
-            <div class="grid-2"> 
+            <div class="grid-3"> 
                 <div class="feature-card clickable-card" id="start-quiz-card"> 
                     <div class="icon"><i class="fa-solid fa-star" style="color: #a26bfe;"></i></div> 
                     <h4 data-i18n-key="quizTitle">Name Style Quiz</h4> 
                     <p data-i18n-key="quizSubtitle">Discover your naming style.</p> 
+                </div> 
+                <div class="feature-card clickable-card" id="couple-mode-card"> 
+                    <div class="icon"><i class="fa-solid fa-hand-holding-heart" style="color: #ef779d;"></i></div> 
+                    <h4 data-i18n-key="coupleModeTitle">Couple Mode</h4> 
+                    <p data-i18n-key="coupleModeSubtitle">Find names you both love.</p> 
                 </div> 
                 <div class="feature-card clickable-card" id="share-lists-card"> 
                     <div class="icon"><i class="fa-solid fa-share-nodes" style="color: #74b3f9;"></i></div> 
@@ -150,7 +168,7 @@
     </div>
 
     <div id="modal-overlay" style="display: none;"></div>
-    <div id="themed-lists-modal" style="display: none;">
+    <div id="main-modal" style="display: none;">
         <button id="modal-close-btn" class="modal-close-btn">&times;</button>
         <div id="modal-content">
         </div>
