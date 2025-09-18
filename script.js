@@ -116,10 +116,12 @@ async function cleanupOldFirebaseSessions() {
         
         if (snapshot.exists()) {
             let count = 0;
+            const updates = {};
             snapshot.forEach(childSnapshot => {
-                childSnapshot.ref.remove();
+                updates[childSnapshot.key] = null;
                 count++;
             });
+            sessionsRef.update(updates);
             console.log(`${count} sessões antigas foram apagadas.`);
         } else {
             console.log("Nenhuma sessão antiga encontrada.");
@@ -143,7 +145,7 @@ function displayJoinSession() { const currentLang = localStorage.getItem('langua
 
 function startCoupleSession(sessionId) {
     if (coupleModeListener) {
-        database.ref('sessions/' + coupleSessionId).off('value', coupleModeListener);
+        database.ref('sessions/' + coupleSessionId + '/names').off('value', coupleModeListener);
     }
     coupleSessionId = sessionId;
     isInCoupleMode = true;
@@ -157,8 +159,6 @@ function startCoupleSession(sessionId) {
     matchesSection.style.display = 'block';
 
     const sessionRef = database.ref('sessions/' + coupleSessionId);
-    
-    // ATUALIZA A DATA DE ATIVIDADE AO ENTRAR NA SESSÃO
     sessionRef.child('lastActivity').set(firebase.database.ServerValue.TIMESTAMP);
 
     const namesRef = sessionRef.child('names');
@@ -195,10 +195,10 @@ const saveFavorite = (nameObject) => {
     }
     if (isInCoupleMode) {
         const sessionRef = database.ref('sessions/' + coupleSessionId);
-        // Atualiza o nome curtido
-        sessionRef.child('names').child(nameObject.name).child(userId).set(true);
-        // ATUALIZA a data da última atividade na sessão
-        sessionRef.child('lastActivity').set(firebase.database.ServerValue.TIMESTAMP);
+        const updates = {};
+        updates[`names/${nameObject.name}/${userId}`] = true;
+        updates['lastActivity'] = firebase.database.ServerValue.TIMESTAMP;
+        sessionRef.update(updates);
     }
 };
 
