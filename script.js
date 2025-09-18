@@ -71,14 +71,12 @@ function displayQuizQuestion() {
     }
     const questionData = quizData.questions[quizData.currentQuestionIndex];
     const progress = (quizData.currentQuestionIndex / quizData.questions.length) * 100;
-
     const questionText = translations[currentLang][questionData.questionKey];
     let optionsHTML = '';
     questionData.options.forEach(option => {
         const optionText = translations[currentLang][option.key];
         optionsHTML += `<button class="quiz-option-btn">${optionText}</button>`;
     });
-
     quizContainer.innerHTML = `
         <div class="quiz-progress-bar-container">
             <div class="quiz-progress-bar" style="width: ${progress}%;"></div>
@@ -86,7 +84,6 @@ function displayQuizQuestion() {
         <h3 class="quiz-question">${questionText || ''}</h3>
         <div class="quiz-options">${optionsHTML}</div>
     `;
-
     document.querySelectorAll('.quiz-option-btn').forEach((btn, index) => {
         btn.addEventListener('click', () => {
             handleAnswer(index);
@@ -110,21 +107,24 @@ async function cleanupOldFirebaseSessions() {
         const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
         
         const sessionsRef = database.ref('sessions');
-        const oldSessionsQuery = sessionsRef.orderByChild('lastActivity').endAt(cutoff);
         
-        const snapshot = await oldSessionsQuery.once('value');
+        // CORREÇÃO: A consulta correta primeiro ordena por 'lastActivity'
+        // e depois pega todos os itens até (endAt) a data de corte.
+        const snapshot = await sessionsRef.orderByChild('lastActivity').endAt(cutoff).once('value');
         
         if (snapshot.exists()) {
             let count = 0;
             const updates = {};
             snapshot.forEach(childSnapshot => {
-                updates[childSnapshot.key] = null;
+                updates[childSnapshot.key] = null; // Marcar para exclusão
                 count++;
             });
-            sessionsRef.update(updates);
+            
+            // Apaga todos os itens marcados de uma vez
+            await sessionsRef.update(updates);
             console.log(`${count} sessões antigas foram apagadas.`);
         } else {
-            console.log("Nenhuma sessão antiga encontrada.");
+            console.log("Nenhuma sessão antiga encontrada para limpar.");
         }
     } catch (error) {
         console.error("Erro ao limpar sessões antigas:", error);
@@ -142,32 +142,7 @@ function initCoupleMode() {
 
 function displayCreateSession() { const currentLang = localStorage.getItem('language') || 'en'; const newSessionId = Math.random().toString(36).substring(2, 8).toUpperCase(); modalContent.innerHTML = `<h3>${translations[currentLang].createSessionTitle}</h3><p>${translations[currentLang].createSessionDesc}</p><div class="session-code">${newSessionId}</div><button id="copy-code-btn" class="btn btn-primary"><i class="fa-solid fa-copy"></i> <span>${translations[currentLang].copyCodeButton}</span></button>`; document.getElementById('copy-code-btn').addEventListener('click', () => { navigator.clipboard.writeText(newSessionId).then(() => { showToast('listCopiedToast'); startCoupleSession(newSessionId); setTimeout(closeModal, 500); }); }); }
 function displayJoinSession() { const currentLang = localStorage.getItem('language') || 'en'; modalContent.innerHTML = `<h3>${translations[currentLang].joinSessionTitle}</h3><input type="text" id="session-input" class="session-input" maxlength="6" placeholder="${translations[currentLang].joinSessionInputPlaceholder}"><button id="connect-btn" class="btn btn-primary">${translations[currentLang].connectButton}</button>`; document.getElementById('connect-btn').addEventListener('click', async () => { const inputId = document.getElementById('session-input').value.toUpperCase(); if (inputId.length === 6) { const sessionRef = database.ref('sessions/' + inputId); const snapshot = await sessionRef.once('value'); if (snapshot.exists()) { clearLocalFavorites(); startCoupleSession(inputId); closeModal(); } else { showToast('invalidCodeError'); } } else { showToast('invalidCodeError'); } }); }
-
-function startCoupleSession(sessionId) {
-    if (coupleModeListener) {
-        database.ref('sessions/' + coupleSessionId + '/names').off('value', coupleModeListener);
-    }
-    coupleSessionId = sessionId;
-    isInCoupleMode = true;
-    localStorage.setItem('coupleSessionId', coupleSessionId);
-    
-    const currentLang = localStorage.getItem('language') || 'en';
-    activeCoupleModeBanner.innerHTML = `<div class="banner-main-line"><span>${translations[currentLang].coupleModeActive}${coupleSessionId}</span><button id="end-session-btn">${translations[currentLang].endSession}</button></div><div class="banner-tip-line"><i class="fa-solid fa-circle-info"></i> ${translations[currentLang].coupleModeTip}</div>`;
-    activeCoupleModeBanner.style.display = 'flex';
-    document.getElementById('end-session-btn').addEventListener('click', endCoupleSession);
-    
-    matchesSection.style.display = 'block';
-
-    const sessionRef = database.ref('sessions/' + coupleSessionId);
-    sessionRef.child('lastActivity').set(firebase.database.ServerValue.TIMESTAMP);
-
-    const namesRef = sessionRef.child('names');
-    coupleModeListener = namesRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        renderMatches(data);
-    });
-}
-
+function startCoupleSession(sessionId) { if (coupleModeListener) { database.ref('sessions/' + coupleSessionId + '/names').off('value', coupleModeListener); } coupleSessionId = sessionId; isInCoupleMode = true; localStorage.setItem('coupleSessionId', coupleSessionId); const currentLang = localStorage.getItem('language') || 'en'; activeCoupleModeBanner.innerHTML = `<div class="banner-main-line"><span>${translations[currentLang].coupleModeActive}${coupleSessionId}</span><button id="end-session-btn">${translations[currentLang].endSession}</button></div><div class="banner-tip-line"><i class="fa-solid fa-circle-info"></i> ${translations[currentLang].coupleModeTip}</div>`; activeCoupleModeBanner.style.display = 'flex'; document.getElementById('end-session-btn').addEventListener('click', endCoupleSession); matchesSection.style.display = 'block'; const sessionRef = database.ref('sessions/' + coupleSessionId); sessionRef.child('lastActivity').set(firebase.database.ServerValue.TIMESTAMP); const namesRef = sessionRef.child('names'); coupleModeListener = namesRef.on('value', (snapshot) => { const data = snapshot.val(); renderMatches(data); }); }
 function endCoupleSession() { if (coupleModeListener) { database.ref('sessions/' + coupleSessionId + '/names').off('value', coupleModeListener); } isInCoupleMode = false; coupleSessionId = null; coupleModeListener = null; localStorage.removeItem('coupleSessionId'); activeCoupleModeBanner.style.display = 'none'; matchesSection.style.display = 'none'; matchesList.innerHTML = ''; }
 function renderMatches(data) { if (!data) { matchesList.innerHTML = ''; return; } let matchesHTML = ''; Object.keys(data).forEach(nameStr => { const likers = Object.keys(data[nameStr]); if (likers.length > 1) { const nameObject = names.find(n => n.name === nameStr); if(nameObject) { let nameClass = ''; if (nameObject.gender === 'menina') nameClass = 'name-girl'; else if (nameObject.gender === 'menino') nameClass = 'name-boy'; else if (nameObject.gender === 'unissex') nameClass = 'name-unisex'; matchesHTML += `<div class="favorite-card"><div class="favorite-card-name ${nameClass}">${nameObject.name}</div></div>`; } } }); matchesList.innerHTML = matchesHTML; }
 
@@ -185,7 +160,6 @@ const updateTrendingNames = () => { const now = new Date(); const weekSeedStr = 
             </div>`; trendingContainer.innerHTML += cardHTML; }); };
 const renderFavorites = () => { if (favorites.length === 0) { favoritesSection.style.display = 'none'; return; } favoritesSection.style.display = 'block'; favoritesList.innerHTML = ''; favorites.forEach(favName => { const card = document.createElement('div'); card.className = 'favorite-card'; let nameClass = ''; if (favName.gender === 'menina') { nameClass = 'name-girl'; } else if (favName.gender === 'menino') { nameClass = 'name-boy'; } else if (favName.gender === 'unissex') { nameClass = 'name-unisex'; } card.innerHTML = `<div class="favorite-card-name ${nameClass}">${favName.name}</div><button class="remove-fav-btn" data-name="${favName.name}" title="Remove favorite">&times;</button>`; favoritesList.appendChild(card); }); };
 function clearLocalFavorites() { favorites = []; localStorage.removeItem('favoriteNames'); renderFavorites(); }
-
 const saveFavorite = (nameObject) => {
     const isAlreadyFavorite = favorites.some(fav => fav.name === nameObject.name);
     if (!isAlreadyFavorite) {
@@ -201,7 +175,6 @@ const saveFavorite = (nameObject) => {
         sessionRef.update(updates);
     }
 };
-
 function showToast(messageKey) { const currentLang = localStorage.getItem('language') || 'en'; const message = translations[currentLang][messageKey]; const toast = document.createElement('div'); toast.className = 'toast-notification'; toast.textContent = message; toastContainer.appendChild(toast); setTimeout(() => { toast.remove(); }, 3000); }
 const shareSingleName = (nameObject) => { const currentLang = localStorage.getItem('language') || 'en'; let textTemplate = translations[currentLang].shareNameText; const textToCopy = textTemplate.replace('%name%', nameObject.name).replace('%meaning%', nameObject.meaning); navigator.clipboard.writeText(textToCopy).then(() => { showToast('listCopiedToast'); }).catch(err => console.error('Failed to copy name: ', err)); };
 function displaySelectedName(selectedName) { const currentLang = localStorage.getItem('language') || 'en'; let tagsHTML = ''; if (selectedName.tags) { selectedName.tags.forEach(tag => { tagsHTML += `<span class="tag">${tag}</span>`; }); } let nameClass = ''; if (currentGenderFilter === 'menina') { nameClass = 'name-girl'; } else if (currentGenderFilter === 'menino') { nameClass = 'name-boy'; } else { if (selectedName.gender === 'menina') nameClass = 'name-girl'; else if (selectedName.gender === 'menino') nameClass = 'name-boy'; else nameClass = 'name-unisex'; } resultContainer.innerHTML = `<div><h3 class="result-name ${nameClass}">${selectedName.name}</h3><div class="result-tags">${tagsHTML}</div><p class="result-meaning">"${selectedName.meaning}"</p><div class="name-actions"><button class="action-btn save-favorite"><i class="fa-regular fa-heart"></i><span data-i18n-key="saveFavorite">${translations[currentLang].saveFavorite}</span></button><button class="action-btn share-name-btn"><i class="fa-solid fa-share-alt"></i><span data-i18n-key="shareNameButton">${translations[currentLang].shareNameButton}</span></button></div></div>`; resultContainer.querySelector('.save-favorite').addEventListener('click', () => saveFavorite(selectedName)); resultContainer.querySelector('.share-name-btn').addEventListener('click', () => shareSingleName(selectedName)); }
