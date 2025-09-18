@@ -24,6 +24,11 @@ body {
     background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0);
     background-size: 20px 20px;
 }
+/* Impede a rolagem da página principal quando o quiz está ativo */
+body.quiz-active {
+    overflow: hidden;
+}
+
 .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; }
 
 #active-couple-mode-banner {
@@ -154,7 +159,23 @@ body {
 .remove-fav-btn { position: absolute; top: 5px; right: 8px; background: none; border: none; font-size: 1.2rem; color: #aaa; cursor: pointer; transition: color 0.2s; }
 .remove-fav-btn:hover { color: #f00; }
 
-.quiz-card { text-align: center; }
+/* ESTILOS DO QUIZ (ALTERADO) */
+#quiz-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(253, 252, 255, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+.quiz-card { text-align: center; width: 100%; max-width: 700px; }
 #quiz-container h3 { font-size: 1.8rem; color: var(--heading-text); margin-bottom: 25px; }
 .quiz-question { font-size: 1.2rem; margin-bottom: 30px; }
 .quiz-options, .quiz-gender-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px; }
@@ -192,7 +213,7 @@ body {
 .themed-name-list li { margin-bottom: 10px; font-size: 1.1rem; }
 .modal-footer { margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px; display: flex; justify-content: center; gap: 15px; }
 
-#toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1001; display: flex; flex-direction: column; align-items: flex-end; }
+#toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1101; display: flex; flex-direction: column; align-items: flex-end; }
 .toast-notification { background-color: var(--heading-text); color: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-top: 10px; font-weight: 500; opacity: 0; animation: toastFadeIn 0.5s forwards, toastFadeOut 0.5s 2.5s forwards; }
 
 @keyframes toastFadeIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
