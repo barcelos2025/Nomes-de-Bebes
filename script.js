@@ -3,10 +3,10 @@
 // =================================================================================
 const firebaseConfig = {
     apiKey: "AIzaSyCgD0SPwxUTQGICJaQOUQ8Y5IVdDIsZ4W4",
-    authDomain: "nomes-de-bebes-7d5.firebaseapp.com",
-    databaseURL: "https://nomes-de-bebes-7d5-default-rtdb.firebaseio.com",
-    projectId: "nomes-de-bebes-7d5",
-    storageBucket: "nomes-de-bebes-7d5.appspot.com",
+    authDomain: "nomes-de-bebes-793d5.firebaseapp.com",
+    databaseURL: "https://nomes-de-bebes-793d5-default-rtdb.firebaseio.com",
+    projectId: "nomes-de-bebes-793d5",
+    storageBucket: "nomes-de-bebes-793d5.appspot.com",
     messagingSenderId: "582934410267",
     appId: "1:582934410267:web:0ea6457c79df1ba5fd74be"
 };
@@ -55,12 +55,48 @@ const footerLinks = document.querySelector('.footer-links');
 
 // LÓGICA DO QUIZ
 const quizData = {
-    questions: [ { questionKey: "q1_question", options: [{ key: "q1_opt1", scores: { classic: 2, modern: 0, nature: 0, romantic: 1 } }, { key: "q1_opt2", scores: { classic: 0, modern: 2, nature: 1, romantic: 0 } }] }, { questionKey: "q2_question", options: [{ key: "q2_opt1", scores: { classic: 1, modern: 0, nature: 0, romantic: 2 } }, { key: "q2_opt2", scores: { classic: 0, modern: 2, nature: 1, romantic: 0 } }] }, { questionKey: "q3_question", options: [{ key: "q3_opt1", scores: { classic: 0, modern: 0, nature: 2, romantic: 1 } }, { key: "q3_opt2", scores: { classic: 2, modern: 1, nature: 0, romantic: 0 } }] }, { questionKey: "q4_question", options: [{ key: "q4_opt1", scores: { classic: 1, modern: 2, nature: 0, romantic: 0 } }, { key: "q4_opt2", scores: { classic: 2, modern: 0, nature: 0, romantic: 2 } }] }, { questionKey: "q5_question", options: [{ key: "q5_opt1", scores: { classic: 0, modern: 2, nature: 0, romantic: 0 } }, { key: "q5_opt2", scores: { classic: 0, modern: 0, nature: 2, romantic: 1 } }, { key: "q5_opt3", scores: { classic: 2, modern: 0, nature: 0, romantic: 2 } }] } ],
-    results: { classic: { titleKey: "style_classic_title", descKey: "style_classic_desc" }, modern: { titleKey: "style_modern_title", descKey: "style_modern_desc" }, nature: { titleKey: "style_nature_title", descKey: "style_nature_desc" }, romantic: { titleKey: "style_romantic_title", descKey: "style_romantic_desc" } },
-    userScores: { classic: 0, modern: 0, nature: 0, romantic: 0 }, currentQuestionIndex: 0, selectedGender: null
+    questions: [
+        { questionKey: "q1_question", options: [{ key: "q1_opt1", scores: { classic: 2, modern: 0, nature: 0, romantic: 1 } }, { key: "q1_opt2", scores: { classic: 0, modern: 2, nature: 1, romantic: 0 } }] },
+        { questionKey: "q2_question", options: [{ key: "q2_opt1", scores: { classic: 1, modern: 0, nature: 0, romantic: 2 } }, { key: "q2_opt2", scores: { classic: 0, modern: 2, nature: 1, romantic: 0 } }] },
+        { questionKey: "q3_question", options: [{ key: "q3_opt1", scores: { classic: 0, modern: 0, nature: 2, romantic: 1 } }, { key: "q3_opt2", scores: { classic: 2, modern: 1, nature: 0, romantic: 0 } }] },
+        { questionKey: "q4_question", options: [{ key: "q4_opt1", scores: { classic: 1, modern: 2, nature: 0, romantic: 0 } }, { key: "q4_opt2", scores: { classic: 2, modern: 0, nature: 0, romantic: 2 } }] },
+        { questionKey: "q5_question", options: [{ key: "q5_opt1", scores: { classic: 0, modern: 2, nature: 0, romantic: 0 } }, { key: "q5_opt2", scores: { classic: 0, modern: 0, nature: 2, romantic: 1 } }, { key: "q5_opt3", scores: { classic: 2, modern: 0, nature: 0, romantic: 2 } }] }
+    ],
+    results: {
+        classic: { titleKey: "style_classic_title", descKey: "style_classic_desc" },
+        modern: { titleKey: "style_modern_title", descKey: "style_modern_desc" },
+        nature: { titleKey: "style_nature_title", descKey: "style_nature_desc" },
+        romantic: { titleKey: "style_romantic_title", descKey: "style_romantic_desc" }
+    },
+    userScores: { classic: 0, modern: 0, nature: 0, romantic: 0 },
+    currentQuestionIndex: 0,
+    selectedGender: null
 };
-function startQuiz() { quizData.userScores = { classic: 0, modern: 0, nature: 0, romantic: 0 }; quizData.currentQuestionIndex = 0; quizData.selectedGender = null; quizSection.style.display = 'block'; quizSection.scrollIntoView({ behavior: 'smooth' }); displayGenderSelection(); }
-function displayGenderSelection() { const currentLang = localStorage.getItem('language') || 'en'; quizContainer.innerHTML = `<h3>${translations[currentLang].quizGenderTitle}</h3><div class="quiz-gender-options"><button class="quiz-gender-btn" data-gender="menino">${translations[currentLang].quizGenderBoy}</button><button class="quiz-gender-btn" data-gender="menina">${translations[currentLang].quizGenderGirl}</button><button class="quiz-gender-btn" data-gender="unissex">${translations[currentLang].quizGenderUnisex}</button></div>`; document.querySelectorAll('.quiz-gender-btn').forEach(btn => { btn.addEventListener('click', (e) => { quizData.selectedGender = e.target.dataset.gender; displayQuizQuestion(); }); }); }
+function startQuiz() {
+    quizData.userScores = { classic: 0, modern: 0, nature: 0, romantic: 0 };
+    quizData.currentQuestionIndex = 0;
+    quizData.selectedGender = null;
+    quizSection.style.display = 'block';
+    quizSection.scrollIntoView({ behavior: 'smooth' });
+    displayGenderSelection();
+}
+function displayGenderSelection() {
+    const currentLang = localStorage.getItem('language') || 'en';
+    quizContainer.innerHTML = `
+        <h3>${translations[currentLang].quizGenderTitle}</h3>
+        <div class="quiz-gender-options">
+            <button class="quiz-gender-btn" data-gender="menino">${translations[currentLang].quizGenderBoy}</button>
+            <button class="quiz-gender-btn" data-gender="menina">${translations[currentLang].quizGenderGirl}</button>
+            <button class="quiz-gender-btn" data-gender="unissex">${translations[currentLang].quizGenderUnisex}</button>
+        </div>
+    `;
+    document.querySelectorAll('.quiz-gender-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            quizData.selectedGender = e.target.dataset.gender;
+            displayQuizQuestion();
+        });
+    });
+}
 function displayQuizQuestion() {
     const currentLang = localStorage.getItem('language') || 'en';
     if (quizData.currentQuestionIndex >= quizData.questions.length) {
@@ -70,7 +106,6 @@ function displayQuizQuestion() {
     const questionData = quizData.questions[quizData.currentQuestionIndex];
     const progress = (quizData.currentQuestionIndex / quizData.questions.length) * 100;
 
-    // CORREÇÃO: Busca o texto da pergunta e das opções usando as chaves corretas
     const questionText = translations[currentLang][questionData.questionKey];
     let optionsHTML = '';
     questionData.options.forEach(option => {
@@ -82,7 +117,7 @@ function displayQuizQuestion() {
         <div class="quiz-progress-bar-container">
             <div class="quiz-progress-bar" style="width: ${progress}%;"></div>
         </div>
-        <h3 class="quiz-question">${questionText}</h3>
+        <h3 class="quiz-question">${questionText || ''}</h3>
         <div class="quiz-options">${optionsHTML}</div>
     `;
 
@@ -92,14 +127,21 @@ function displayQuizQuestion() {
         });
     });
 }
-function handleAnswer(optionIndex) { const question = quizData.questions[quizData.currentQuestionIndex]; const selectedOption = question.options[optionIndex]; for (const style in selectedOption.scores) { quizData.userScores[style] += selectedOption.scores[style]; } quizData.currentQuestionIndex++; displayQuizQuestion(); }
+function handleAnswer(optionIndex) {
+    const question = quizData.questions[quizData.currentQuestionIndex];
+    const selectedOption = question.options[optionIndex];
+    for (const style in selectedOption.scores) {
+        quizData.userScores[style] += selectedOption.scores[style];
+    }
+    quizData.currentQuestionIndex++;
+    displayQuizQuestion();
+}
 function getStyleSuggestions(style, gender) { const styleToTagsMap = { classic: ['European', 'Christian', 'Jewish', 'Latin American', 'Celtic'], modern: ['International', 'Polynesian'], nature: ['Spiritual'], romantic: ['Spiritual', 'Celtic'] }; const natureKeywords = ['flor', 'pedra', 'rio', 'lua', 'sol', 'mar', 'céu', 'estrela', 'natureza', 'terra', 'monte', 'flower', 'stone', 'river', 'moon', 'sun', 'sea', 'sky', 'star', 'nature', 'earth', 'mount']; let filteredNames = names.filter(name => { return name.gender === gender || (gender === 'menino' && name.gender === 'unissex') || (gender === 'menina' && name.gender === 'unissex'); }); let styleFiltered = []; if (style === 'nature') { styleFiltered = filteredNames.filter(name => (name.tags && name.tags.some(tag => styleToTagsMap[style].includes(tag))) || (name.meaning && natureKeywords.some(keyword => name.meaning.toLowerCase().includes(keyword)))); } else { styleFiltered = filteredNames.filter(name => name.tags && name.tags.some(tag => styleToTagsMap[style].includes(tag))); } if (styleFiltered.length < 5) { styleFiltered = [...styleFiltered, ...filteredNames.filter(n => !styleFiltered.includes(n))]; } return styleFiltered.sort(() => 0.5 - Math.random()).slice(0, 5); }
-function displayQuizResult() { let finalStyle = 'modern'; let maxScore = 0; for (const style in quizData.userScores) { if (quizData.userScores[style] > maxScore) { maxScore = quizData.userScores[style]; finalStyle = style; } } const result = quizData.results[finalStyle]; const currentLang = localStorage.getItem('language') || 'en'; const suggestions = getStyleSuggestions(finalStyle, quizData.selectedGender); let suggestionsHTML = ''; if (suggestions.length > 0) { suggestions.forEach(name => { let nameClass = ''; if (quizData.selectedGender === 'menina') nameClass = 'name-girl'; else if (quizData.selectedGender === 'menino') nameClass = 'name-boy'; else { if (name.gender === 'menina') nameClass = 'name-girl'; else if (name.gender === 'menino') nameClass = 'name-boy'; else nameClass = 'name-unisex'; } suggestionsHTML += `<div class="suggestion-card"><div class="name ${nameClass}">${name.name}</div><div class="meaning">"${name.meaning}"</div></div>`; }); } quizContainer.innerHTML = `<div class="quiz-result"><h4>${translations[currentLang].quizResultTitle}</h4><p class="result-style">${translations[currentLang][result.titleKey]}</p><p>${translations[currentLang][result.descKey]}</p><div class="quiz-suggestions-container"><h4>${translations[currentLang].quizSuggestionsTitle}</h4>${suggestionsHTML}</div><button id="restart-quiz-btn" class="btn btn-primary" style="margin-top: 30px;"><i class="fa-solid fa-arrows-rotate"></i> <span>${translations[currentLang].quizRestartButton}</span></button></div>`; document.getElementById('restart-quiz-btn').addEventListener('click', startQuiz); }
+function displayQuizResult() { let finalStyle = 'modern'; let maxScore = 0; for (const style in quizData.userScores) { if (quizData.userScores[style] > maxScore) { maxScore = quizData.userScores[style]; finalStyle = style; } } const result = quizData.results[finalStyle]; const currentLang = localStorage.getItem('language') || 'en'; const suggestions = getStyleSuggestions(finalStyle, quizData.selectedGender); let suggestionsHTML = ''; if (suggestions.length > 0) { suggestions.forEach(name => { let nameClass = ''; if (quizData.selectedGender === 'menina') nameClass = 'name-girl'; else if (quizData.selectedGender === 'menino') nameClass = 'name-boy'; else { if (name.gender === 'menina') nameClass = 'name-girl'; else if (name.gender === 'menino') nameClass = 'name-boy'; else nameClass = 'name-unissex'; } suggestionsHTML += `<div class="suggestion-card"><div class="name ${nameClass}">${name.name}</div><div class="meaning">"${name.meaning}"</div></div>`; }); } quizContainer.innerHTML = `<div class="quiz-result"><h4>${translations[currentLang].quizResultTitle}</h4><p class="result-style">${translations[currentLang][result.titleKey]}</p><p>${translations[currentLang][result.descKey]}</p><div class="quiz-suggestions-container"><h4>${translations[currentLang].quizSuggestionsTitle}</h4>${suggestionsHTML}</div><button id="restart-quiz-btn" class="btn btn-primary" style="margin-top: 30px;"><i class="fa-solid fa-arrows-rotate"></i> <span>${translations[currentLang].quizRestartButton}</span></button></div>`; document.getElementById('restart-quiz-btn').addEventListener('click', startQuiz); }
 
 // LÓGICA DO MODAL
 function openModal() { mainModal.style.display = 'block'; modalOverlay.style.display = 'block'; }
 function closeModal() { mainModal.style.display = 'none'; modalOverlay.style.display = 'none'; }
-
 function openPageModal(pageKey) {
     const currentLang = localStorage.getItem('language') || 'en';
     const title = translations[currentLang][`${pageKey}Title`] || '';
