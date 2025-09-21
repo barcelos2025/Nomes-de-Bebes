@@ -105,6 +105,21 @@ body.quiz-active {
 .ad-space { border: 2px dashed var(--border-color); padding: 40px; margin: 40px auto; border-radius: 20px; color: #aaa; font-weight: 500;}
 .generator-card { text-align: left; margin-bottom: 20px; }
 
+#generator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+#generator .generator-card {
+    width: 100%;
+}
+
+#generate-btn {
+    align-self: center;
+}
+
 .filters { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; margin: 20px 0; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
 .filter-group { flex: 1; min-width: 150px; }
 .filter-group label { display: block; font-weight: 600; margin-bottom: 10px; }
@@ -112,7 +127,18 @@ body.quiz-active {
 .gender-options button.active { background-color: var(--pink); color: white; border-color: var(--pink); }
 .dropdown { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); }
 
-.result-display { text-align: center; padding: 20px 0 30px 0; min-height: 180px; display: flex; justify-content: center; align-items: center; }
+.result-display {
+    text-align: center;
+    padding: 20px 0 30px 0;
+    min-height: 320px;
+    height: clamp(320px, 34vh, 360px);
+    max-height: 360px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
 .result-name { font-size: 5.0rem; font-weight: 700; color: var(--heading-text); }
 .name-girl { color: var(--girl-color); }
 .name-boy { color: var(--boy-color); }
@@ -237,3 +263,5 @@ body.quiz-active {
     .themed-name-list { columns: 1; }
     #toast-container { right: 10px; left: 10px; bottom: 10px; align-items: stretch; }
 }
+
+
