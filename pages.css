@@ -12,6 +12,17 @@
     --gradient: linear-gradient(90deg, #ef779d, #a26bfe, #74b3f9);
 }
 
+:root[data-theme="dark"] {
+    --bg-color: #11121a;
+    --primary-text: #e5e9f5;
+    --heading-text: #ffffff;
+    --pink: #ef779d;
+    --card-bg: #1a1b25;
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    --border-color: rgba(229, 233, 245, 0.12);
+    --gradient: linear-gradient(90deg, #f9a8d4, #c6a4ff, #8ec5fc);
+}
+
 /* =================================
    Reset e Estilos Globais
 ==================================== */
@@ -29,7 +40,65 @@ body {
     background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0);
     background-size: 20px 20px;
 }
+html[data-theme="dark"] body {
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+}
 
+
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--heading-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    z-index: 1200;
+}
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--pink);
+    outline: none;
+}
+.theme-toggle .theme-icon {
+    font-size: 1.2rem;
+}
+.theme-toggle .sun-icon {
+    display: none;
+    color: #fcd34d;
+}
+.theme-toggle .moon-icon {
+    color: #6366f1;
+}
+html[data-theme="dark"] .theme-toggle {
+    background-color: #242636;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+html[data-theme="dark"] .theme-toggle .sun-icon {
+    display: inline-block;
+}
+html[data-theme="dark"] .theme-toggle .moon-icon {
+    display: none;
+}
+@media (max-width: 600px) {
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        top: 16px;
+        right: 16px;
+    }
+}
 .container {
     max-width: 800px;
     margin: 0 auto;

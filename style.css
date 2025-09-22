@@ -14,6 +14,23 @@
     --gradient-top-pick: linear-gradient(135deg, #cfe2ff, #b8daff);
     --gradient-popular: linear-gradient(135deg, #f8d7da, #f5c6cb);
 }
+
+:root[data-theme="dark"] {
+    --bg-color: #11121a;
+    --primary-text: #e5e9f5;
+    --heading-text: #ffffff;
+    --pink: #ef779d;
+    --card-bg: #1a1b25;
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    --border-color: rgba(229, 233, 245, 0.12);
+    --gradient: linear-gradient(90deg, #f9a8d4, #c6a4ff, #8ec5fc);
+    --girl-color: #f9a8d4;
+    --boy-color: #8ec5fc;
+    --unisex-color: #b6a4ff;
+    --gradient-rising: linear-gradient(135deg, rgba(65, 148, 104, 0.35), rgba(92, 176, 133, 0.35));
+    --gradient-top-pick: linear-gradient(135deg, rgba(90, 125, 181, 0.35), rgba(110, 156, 220, 0.35));
+    --gradient-popular: linear-gradient(135deg, rgba(212, 109, 125, 0.35), rgba(207, 101, 132, 0.35));
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { 
     font-family: 'Poppins', sans-serif; 
@@ -24,10 +41,68 @@ body {
     background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0);
     background-size: 20px 20px;
 }
+html[data-theme="dark"] body {
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+}
+
 body.quiz-active {
     overflow: hidden;
 }
 
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--heading-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    z-index: 1200;
+}
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--pink);
+    outline: none;
+}
+.theme-toggle .theme-icon {
+    font-size: 1.2rem;
+}
+.theme-toggle .sun-icon {
+    display: none;
+    color: #fcd34d;
+}
+.theme-toggle .moon-icon {
+    color: #6366f1;
+}
+html[data-theme="dark"] .theme-toggle {
+    background-color: #242636;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+html[data-theme="dark"] .theme-toggle .sun-icon {
+    display: inline-block;
+}
+html[data-theme="dark"] .theme-toggle .moon-icon {
+    display: none;
+}
+@media (max-width: 600px) {
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        top: 16px;
+        right: 16px;
+    }
+}
 .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; }
 
 #active-couple-mode-banner {
@@ -238,8 +313,9 @@ body.quiz-active {
 .choice-buttons { display: flex; gap: 15px; justify-content: center; text-align: center; }
 .session-code { background-color: var(--border-color); border: 2px dashed #d1c4e9; color: var(--heading-text); padding: 20px; border-radius: 15px; font-size: 2.5rem; font-weight: 700; letter-spacing: 5px; margin-bottom: 20px; text-align: center; }
 .session-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1.5rem; text-align: center; letter-spacing: 3px; margin-bottom: 20px; }
-.theme-list-item { display: block; width: 100%; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; cursor: pointer; transition: all 0.2s ease; }
+.theme-list-item { display: block; width: 100%; background-color: var(--card-bg); color: var(--primary-text); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; cursor: pointer; transition: all 0.2s ease; }
 .theme-list-item:hover { border-color: var(--pink); color: var(--pink); transform: translateX(5px); }
+.theme-list-item:focus-visible { border-color: var(--pink); color: var(--pink); outline: none; }
 .themed-name-list { columns: 2; gap: 15px; text-align: left; list-style-type: none; padding-left: 0; }
 .themed-name-list li { margin-bottom: 10px; font-size: 1.1rem; }
 .modal-footer { margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px; display: flex; justify-content: center; gap: 15px; }

@@ -3,14 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre NÃ³s - Perfect Baby Names</title>
+    <title>Sobre Nós - Perfect Baby Names</title>
+
+    <script>
+        (function() {
+            try {
+                const storageKey = 'pb-theme';
+                const storedTheme = localStorage.getItem(storageKey);
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (error) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
     <link rel="stylesheet" href="pages.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="theme-toggle.js" defer></script>
+
 </head>
 <body>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Ativar modo escuro">
+        <i class="fa-solid fa-moon theme-icon moon-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-sun theme-icon sun-icon" aria-hidden="true"></i>
+    </button>
     <header class="page-header">
         <div class="container">
             <a href="index.html" class="logo">Perfect Baby Names</a>
